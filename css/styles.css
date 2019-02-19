@@ -1,0 +1,150 @@
+:root {
+  --bg-color-main : #576e36;
+  --bg-color-white : #ffffff;
+  --font-color-green : #08000;
+  --font-color-lightgreen : #3f8077;
+  --font-color-white : #faf0e6;
+  --font-color-lightgrey : #c0c0c0;
+}
+
+body {
+  font-family : Montserrat;
+  margin : 10px;
+}
+
+img {
+  width : 40%;
+}
+
+#logo {
+  width : 20%;
+}
+
+#modal-container {
+  display : none;
+}
+
+#modal-container.is-visible {
+  background-color : var(--font-color-lightgreen);
+  color : var(--font-color-white);
+  position: fixed;
+  padding: 20px;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  overflow: auto;
+  display: grid;
+  text-align: center;
+}
+
+.modal {
+  color : var(--font-color-lightgrey);
+  margin: auto;
+  display: inline-block;
+  box-sizing: border-box;
+  background: var(--font-color-lightgreen);
+  padding: 15px;
+  width: 100%;
+  max-width: 700px;
+  text-align: left;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.modal-close {
+  float: right;
+  border: 0;
+  background: none;
+  color: var(--font-color-lightgrey);
+  text-decoration: none;
+}
+
+#show-modal {
+  background-color: var(--bg-color-green);
+  margin : 1em;
+  padding : 5px;
+  width : 150px;
+  text-decoration : none;
+  border-radius : 8px;
+  border-width : 1px;
+  box-shadow : 2px 2px 3px 0px #000000;
+  cursor : pointer;
+  transition : 0.5s;
+}
+
+section {
+  display : grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap : 10px;
+  background-color : var(--bg-color-main);
+  color : white;
+  padding : 10px;
+  margin : 10px;
+  border-radius : 10px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.listButton {
+  background-color: var(--bg-color-green);
+  color : var(--font-color-white);
+  margin : 1em;
+  padding : 5px;
+  width : 150px;
+  text-decoration : none;
+  border-radius : 8px;
+  border-width : 1px;
+  box-shadow : 2px 2px 3px 0px #000000;
+  cursor : pointer;
+  transition : 0.5s;
+ }
+
+ .listButton:hover {
+   background-color: var(--font-color-lightgreen);
+   color : var(--font-color-white);
+     }
+
+ .listButton:active  {
+   background-color: var(--bg-color-white);
+   color : black;
+ }
+
+ .listbutton:visited  {
+   background-color: var(--bg-color-white);
+   color : var(--font-color-green);
+ }
+
+
+@media all and (max-width: 499px) {
+  section {
+    display : grid;
+    grid-template-columns: 1fr;
+    grid-gap: 5px;
+    }
+
+  h1 {
+  font-size: 20px;
+  }
+}
+
+@media all and (min-width : 500px) and (max-width: 800px) {
+  section {
+    display : grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 7px;
+  }
+  h1 {
+  font-size: 20px;
+  }
+}

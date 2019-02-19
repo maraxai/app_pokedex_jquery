@@ -1,0 +1,178 @@
+// begin IIFE (Immediately Invoked Function Expression), purpose: avoid global pollution
+var pokemonRepository = (function() {
+  // array for API (Application Program Interface) elements and their properties (Pokemons)
+  var pokemons = [];
+  // API URL to a database
+  var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=10';
+  // DOM (Document Object Model) Modification, i.e. creation of HTML elements in conjunction with API records
+  function addListItem(item) {
+    showDetails(item);
+    //DOM search for first <ul> tag in HTML document
+    var $ul = document.querySelector('ul');
+    //DOM creation of <li> <tag>
+    var $li = document.createElement('li');
+    //DOM attachment of newly created li element to ul element
+    $ul.appendChild($li);
+    //DOM creation of button element
+    var $btn = document.createElement('button');
+    //DOM creation of class indentifier
+    $btn.classList.add('listButton');
+    $li.appendChild($btn);
+    $btn.innerText = item.name;
+
+    // button click opens modal and displays information, used because showModal in showDetails() does not work
+    $btn.addEventListener('click', function () {
+      showModal(item.name, item.imageUrl, item.height, item.types);
+    });
+  }
+
+  // makes loadedDetails(item) available
+  function showDetails(item) {
+     pokemonRepository.loadDetails(item).then(function () {
+     // since the next line produces erratic behavior, line24-25 are used
+//    showModal(item.name, item.imageUrl, item.height, item.types);
+    });
+  }
+
+  // adds an API record to the array pokemons with the .push method
+  function add(item) {
+    pokemons.push(item);
+  }
+  //return all records from the array pokemons
+  function getAll() {
+    return pokemons;
+  }
+  // loads the API list - contains item.name and item.detailsUrl only, NO details
+  function loadList() {
+    /* a promise with a resolved (.then()) and a rejection case (.catch())
+    is returned with the .json() method - here's the asynchronous function*/
+    return fetch(apiUrl).then(function (response) {
+      return response.json();
+    })
+      .then(function (json) {
+        json.results.forEach(function (item) {
+          var pokemon = {
+            name: item.name,
+            detailsUrl: item.url
+          };
+          add(pokemon);
+        });
+      })
+      .catch(function (e) {
+       console.error(e);
+     })
+  }
+  // similar to lines 66-80, i.e. asynchronous function, get details from API
+  function loadDetails(item) {
+    var url = item.detailsUrl;
+    return fetch(url).then(function (response) {
+      return response.json();
+      })
+      .then(function (details) {
+        // Now we add the details to the item
+        item.imageUrl = details.sprites.front_default;
+        item.height = details.height;
+        item.types = Object.keys(details.types);
+      })
+      .catch(function (e) {
+        console.error(e);
+      });
+  }
+
+
+  //  document.querySelector('#show-modal').addEventListener('click', () => {
+ //  showModal('Modal name', 'This is modal content!');
+//  });
+   //code for modal - DOM, add class to div for modal
+   function showModal(name, image, height, types) {
+     var $modalContainer = document.querySelector('#modal-container');
+     //$modalContainer.classList.add('is-visible'); //? is removed in example, error?
+     //clear existing modal content
+     $modalContainer.innerHTML = '';
+     // for modal header
+     var modalHeader = document.createElement('header');
+     modalHeader.classList.add('modal-header');
+     // for modal content
+     var modal = document.createElement('div');
+     modal.classList.add('modal');
+     //add modal content
+     var closeButtonElement = document.createElement('button');
+     closeButtonElement.classList.add('modal-close');
+     closeButtonElement.innerText = 'close';
+     closeButtonElement.addEventListener('click', hideModal);
+
+     var nameElement = document.createElement('h1');
+     nameElement.innerText = name;
+
+     var contentImageElement = document.createElement('img');
+     contentImageElement.setAttribute('src', image);
+     contentImageElement.innerImage = image;
+
+     var contentHeightElement = document.createElement('p');
+     contentHeightElement.innerText = 'height: ' + height + ' inches';
+
+     var contentTypesElement = document.createElement('p');
+     contentTypesElement.innerText = 'types: ' + types;
+
+     $modalContainer.appendChild(modalHeader);
+     $modalContainer.appendChild(modal);
+     modal.appendChild(contentImageElement);
+     modal.appendChild(contentHeightElement);
+     modal.appendChild(contentTypesElement);
+     modalHeader.appendChild(closeButtonElement);
+     modalHeader.appendChild(nameElement);
+
+     $modalContainer.classList.add('is-visible');
+  }
+
+    // no need since the button #show-modal has been blinded
+//  document.querySelector('#show-modal').addEventListener('click', () => {
+//    showModal(name, image, height, types);
+//  });
+
+    // hides the modal container by removing the class is-visible
+    function hideModal() {
+      var $modalContainer = document.querySelector('#modal-container');
+      $modalContainer.classList.remove('is-visible');
+    }
+   // all functions are returned
+   return {
+     add: add,
+     getAll: getAll,
+     //search: search,
+     loadList: loadList,
+     showDetails : showDetails,
+     loadDetails: loadDetails,
+     addListItem : addListItem
+   };
+
+   // closes the modal container by pressing ESC
+   window.addEventListener('keydown', (e) => {
+     var $modalContainer = document.querySelector('#modal-container');
+     if (e.key === 'Escape' && $modalContainer.classList.contains('is-visible')) {
+       hideModal();
+     }
+   });
+
+   // does not work -  should close the modal container by clicking outside the container
+   var $modalContainer = document.querySelector('#modal-container');
+   $modalContainer.addEventListener('click', (e) => {
+     var target = e.target;
+     if (target === $modalContainer) {
+       hideModal();
+     }
+   });
+
+
+})();
+//END OF IIFE
+
+/*the remaining code calls functions within the IIFE /
+function loadList is applied as a method to the array of pokemons,
+.then() is the validate part of the promise */
+pokemonRepository.loadList().then(function() {
+    pokemonRepository.getAll().forEach(function(pokemon){
+      //the function addListItem is applied as a method to the array of the records / DOM
+      pokemonRepository.addListItem(pokemon);
+    });
+});
