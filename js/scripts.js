@@ -3,7 +3,7 @@ var $pokemonRepository = (function() {
   var $pokemons = [];
 
   // API to pull pokemon data
-  var $apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
+  var $apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=5';
 
   // DOM elements, list of buttons and button eventhandler
   function addListItem(item) {
@@ -81,19 +81,8 @@ var $pokemonRepository = (function() {
 
   // function loads the API list - promise, asynchronous function
   function loadList() {
-//   attempt A - does not work
-//    return $.ajax($apiUrl, {dataType:'json'}).then(function (response) {
-//      return response.json();
-//    })
-//   attempt B - does not work either
-//    return $.ajax($apiUrl, {dataType:'json'}).then(function (response) {
-//      return response.responseJSON;
-//    })
-    return fetch($apiUrl).then(function (response) {
-      return response.json();
-    })
-      .then(function (json) {
-        json.results.forEach(function (item) {
+    return $.ajax($apiUrl).then(function (response) {
+        response.results.forEach(function(item) {
           var $pokemon = {
             name: item.name,
             detailsUrl: item.url
@@ -103,16 +92,13 @@ var $pokemonRepository = (function() {
       })
       .catch(function (e) {
        console.error(e);
-     })
+     });
   }
 
   // similar to lines 66-80, i.e. asynchronous function, get details from API
   function loadDetails(item) {
     var $url = item.detailsUrl;
-    return fetch($url).then(function (response) {
-      return response.json();
-      })
-      .then(function (details) {
+    return $.ajax($url).then(function (details) {
         // Now we add the details to the item
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
