@@ -1,0 +1,11 @@
+{
+    "env": {
+        "es6": true,
+        "browser": true
+    },
+    "extends": [
+        "eslint:true",
+        "prettier: true"
+    ]
+}
+© 2019 GitHub, Inc.

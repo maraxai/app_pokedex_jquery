@@ -15,7 +15,7 @@ var $pokemonRepository = (function() {
     $ul.append($li);
     $li.append($btn);
 
-    $btn.on('click', function () {
+    $btn.on('click', function() {
       showDetails(item);
     });
   }
@@ -24,7 +24,6 @@ var $pokemonRepository = (function() {
   function showDetails(item) {
     $pokemonRepository.loadDetails(item).then(function() {
       showModal(item.name, item.imageUrl, item.height, item.types);
-
     });
   }
 
@@ -45,7 +44,7 @@ var $pokemonRepository = (function() {
     $contentNameElement.text(name);
     var $contentImageElement = $('<img>');
     $contentImageElement.attr('src', image);
-  //  $contentImageElement.image(image);
+    //  $contentImageElement.image(image);
     var $contentHeightElement = $('<p></p>');
     $contentHeightElement.text('height: ' + height + ' inches');
 
@@ -64,9 +63,9 @@ var $pokemonRepository = (function() {
   function hideModal() {
     var $modalContainer = $('#modal-container');
     $modalContainer.removeClass('is-visible');
-//  $('.modal').empty();  does not work
-//  $('.modal').reset(); // does not work
-//    $('.modal').remove(); WORKS but no longer necessary bc syntax of .html('') is fixed
+    //  $('.modal').empty();  does not work
+    //  $('.modal').reset(); // does not work
+    //    $('.modal').remove(); WORKS but no longer necessary bc syntax of .html('') is fixed
   }
 
   // adds an API record to the array $pokemons with the .push method
@@ -81,30 +80,32 @@ var $pokemonRepository = (function() {
 
   // function loads the API list - promise, asynchronous function
   function loadList() {
-    return $.ajax($apiUrl).then(function (response) {
+    return $.ajax($apiUrl)
+      .then(function(response) {
         response.results.forEach(function(item) {
           var $pokemon = {
             name: item.name,
-            detailsUrl: item.url
+            detailsUrl: item.url,
           };
           add($pokemon);
         });
       })
-      .catch(function (e) {
-       console.error(e);
-     });
+      .catch(function(e) {
+        console.error(e);
+      });
   }
 
   // similar to lines 66-80, i.e. asynchronous function, get details from API
   function loadDetails(item) {
     var $url = item.detailsUrl;
-    return $.ajax($url).then(function (details) {
+    return $.ajax($url)
+      .then(function(details) {
         // Now we add the details to the item
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
         item.types = Object.keys(details.types);
       })
-      .catch(function (e) {
+      .catch(function(e) {
         console.error(e);
       });
   }
@@ -116,42 +117,41 @@ var $pokemonRepository = (function() {
   $closeButtonElement.on('click', hideModal);
 
   // close modal with esc
-  $(window).on('keydown', (e) => {
-      var $modalContainer = $('#modal-container');
-      if (((e.key) === ('Escape')) && $modalContainer.hasClass('is-visible')) {
-        hideModal();
-      }
-    });
-
-    // close modal by clicking somewhere in the modal container
+  $(window).on('keydown', e => {
     var $modalContainer = $('#modal-container');
-    $modalContainer.on('click', (e) => {
-      var target = e.target;
-      if ($(target).is($modalContainer)) {
-        hideModal();
-      }
-    });
+    if (e.key === 'Escape' && $modalContainer.hasClass('is-visible')) {
+      hideModal();
+    }
+  });
+
+  // close modal by clicking somewhere in the modal container
+  var $modalContainer = $('#modal-container');
+  $modalContainer.on('click', e => {
+    var target = e.target;
+    if ($(target).is($modalContainer)) {
+      hideModal();
+    }
+  });
 
   // returns all functions
   return {
-       add: add,
-       getAll: getAll,
-       //search: search,
-       loadList: loadList,
-       showDetails : showDetails,
-       loadDetails: loadDetails,
-       addListItem : addListItem,
-       showModal : showModal,
-       hideModal : hideModal
-   };
-   //close modal by clicking outside the modal
-
+    add: add,
+    getAll: getAll,
+    //search: search,
+    loadList: loadList,
+    showDetails: showDetails,
+    loadDetails: loadDetails,
+    addListItem: addListItem,
+    showModal: showModal,
+    hideModal: hideModal,
+  };
+  //close modal by clicking outside the modal
 })();
 //END OF IIFE
 
 // calls the data from within the IIFE
 $pokemonRepository.loadList().then(function() {
-  $pokemonRepository.getAll().forEach(function($pokemon){
+  $pokemonRepository.getAll().forEach(function($pokemon) {
     $pokemonRepository.addListItem($pokemon);
   });
 });
