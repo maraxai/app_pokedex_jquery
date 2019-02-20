@@ -3,7 +3,7 @@ var $pokemonRepository = (function() {
   var $pokemons = [];
 
   // API to pull pokemon data
-  var $apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=5';
+  var $apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
 
   // DOM elements, list of buttons and button eventhandler
   function addListItem(item) {
